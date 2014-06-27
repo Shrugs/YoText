@@ -11,6 +11,7 @@ class YoModel(Model):
 class Yoser(YoModel):
     YoserID = PrimaryKeyField(primary_key=True, auto_increment=True)
     YoserName = CharField(100, required=True)
+    PhoneNumber = CharField(10)
     Endpoint = TextField()
     Address = TextField()
     TSAdded = DateTimeField(default=datetime.datetime.now)
