@@ -2,7 +2,7 @@ from flask import Flask, abort
 
 app = Flask(__name__)
 
-@app.route('/yo/<user>')
+@app.route('/<user>')
 def yo(user):
     if not user:
         abort(400)

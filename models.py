@@ -10,8 +10,9 @@ class YoModel(Model):
 
 class Yoser(YoModel):
     YoserID = PrimaryKeyField(primary_key=True, auto_increment=True)
-    YoserName = CharField(100)
+    YoserName = CharField(100, required=True)
     Endpoint = TextField()
+    Address = TextField()
     TSAdded = DateTimeField(default=datetime.datetime.now)
 
 class Yo(YoModel):
