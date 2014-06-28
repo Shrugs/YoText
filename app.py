@@ -40,7 +40,7 @@ def createUser():
             except KeyError:
                 pass
 
-            status = "Username Created! Send them a YO with http://cond.in/yo/%s" % yoser.name
+            status = "Username Created! Send them a YO with http://yotext.herokuapp.com/yo/%s" % yoser.name
 
         except peewee.IntegrityError, e:
             status = "Username %s Taken" % request.form['name']
@@ -49,7 +49,7 @@ def createUser():
         status=status,
         stuff=request.form)
 
-@app.route('/', methods=['POST'])
+@app.route('/yo', methods=['GET', 'POST'])
 def yo():
 
     yosername = request.args.get('to', None)
