@@ -1,7 +1,8 @@
 from flask import Flask, abort, request, render_template
-from models import Yoser, Yo
+from models import Yoser
 import peewee
 from twilio.rest import TwilioRestClient
+from info import *
 
 twilio_client = TwilioRestClient(twilio_sid, twilio_secret)
 
