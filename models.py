@@ -10,7 +10,7 @@ class YoModel(Model):
 
 class Yoser(YoModel):
     name = CharField(100, null=False, unique=True)
-    phone_number = CharField(10)
+    phone_number = CharField(12)
     endpoint = TextField()
     address = TextField()
     friend = ForeignKeyField('self', related_name="friends", null=True)

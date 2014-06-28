@@ -31,7 +31,7 @@ def createUser():
 
             yoser = Yoser.create(
                 name=request.form['name'],
-                phone_number=request.form['phone_number'],
+                phone_number=('+'+request.form['phone_number']),
                 endpoint=request.form['endpoint']
                 )
             try:
@@ -53,14 +53,19 @@ def createUser():
 def yo():
 
     yosername = request.args.get('to', None)
-
+    from_yoser = None
     if not yosername:
         # is either twilio or bad request
-        print request.form
-        abort(400)
+        try:
+            from_yoser = getYoserFromNumber(request.form['From'])
+        except KeyError:
+            # not twilio
+            from_yoser = getYoserFromYoserName(request.args.get('from', None))
+            if not from_yoser:
+                # is bad request
+                abort(400)
 
     yoser = getYoserFromYoserName(yosername)
-    from_yoser = getYoserFromYoserName(from_yosername)
 
 
     message = twilio_client.messages.create(to=yoser.phone_number,
