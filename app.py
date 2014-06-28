@@ -3,14 +3,18 @@ from models import Yoser
 import peewee
 from twilio.rest import TwilioRestClient
 from info import *
+import re
 
 twilio_client = TwilioRestClient(twilio_sid, twilio_secret)
 
 app = Flask(__name__)
 
 restricted_names = [
-    "create"
+    "create",
+    "yo"
 ]
+
+yo_regex = re.compile(r"^[Yy]o (?P<name>\w+)")
 
 def getFriends(yoser):
     return yoser.friends
@@ -43,7 +47,7 @@ def createUser():
             except KeyError:
                 pass
 
-            status = "Username Created! Send them a YO with http://yotext.herokuapp.com/yo/%s" % yoser.name
+            status = "Username Created! Send YOs by texting %s with 'yo <username>'" % twilio_number
 
         except peewee.IntegrityError, e:
             status = "Username %s Taken" % request.form['name']
@@ -56,6 +60,7 @@ def createUser():
 def yo():
 
     from_yoser = None
+    yosername = None
     if request.method == 'GET':
         yosername = request.args.get('to', None)
         # not twilio
@@ -68,11 +73,16 @@ def yo():
         try:
             print request.form
             from_yoser = getYoserFromNumber(request.form['From'])
+            yosername = yo_regex.match(request.form['Body']).group('name')
+
         except KeyError:
             abort(400)
 
+    if not yosername:
+        abort(400)
 
     yoser = getYoserFromYoserName(yosername)
+
     print yoser.phone_number, from_yoser.name, twilio_number
     message = twilio_client.messages.create(to=yoser.phone_number,
                                             from_=twilio_number,
