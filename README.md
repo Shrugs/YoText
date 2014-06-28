@@ -4,7 +4,7 @@ Yo at a buddy with `yo <user>`
 
 Signup users at `/create`.
 
-Host your own texting yo by cloning this repo and creating an info.py with the following values.
+Host your own texting yo by cloning this repo and creating an info.py with the following values and creating a new heroku app.
 
 ```python
 db_name = ""
