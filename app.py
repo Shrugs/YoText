@@ -14,7 +14,7 @@ restricted_names = [
     "yo"
 ]
 
-yo_regex = re.compile(r"^[Yy]o (?P<name>\w+)")
+yo_regex = re.compile(r"^[YyTt]o (?P<name>\w+)")
 
 def getFriends(yoser):
     return yoser.friends
@@ -47,7 +47,7 @@ def createUser():
             except KeyError:
                 pass
 
-            status = "Username Created! Send YOs by texting %s with 'yo <username>'" % twilio_number
+            status = "Username Created! Send YOs by texting %s with 'yo %s>'" % (twilio_number, yoser.name)
 
         except peewee.IntegrityError, e:
             status = "Username %s Taken" % request.form['name']
