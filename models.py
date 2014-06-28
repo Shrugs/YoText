@@ -9,15 +9,14 @@ class YoModel(Model):
         database = db
 
 class Yoser(YoModel):
-    YoserID = PrimaryKeyField(primary_key=True, auto_increment=True)
-    YoserName = CharField(100, required=True)
-    PhoneNumber = CharField(10)
-    Endpoint = TextField()
-    Address = TextField()
-    TSAdded = DateTimeField(default=datetime.datetime.now)
+    yoser_name = CharField(100, null=False, unique=True)
+    phone_number = CharField(10)
+    endpoint = TextField()
+    address = TextField()
+    friend = ForeignKeyField('self', related_name="friends", null=True)
+    ts_added = DateTimeField(default=datetime.datetime.now)
 
 class Yo(YoModel):
-    YoID = PrimaryKeyField(primary_key=True, auto_increment=True)
-    YoFrom = ForeignKeyField(Yoser, related_name="yos_sent")
-    YoTo = ForeignKeyField(Yoser, related_name="yos")
-    TSAdded = DateTimeField(default=datetime.datetime.now)
+    yo_from = ForeignKeyField(Yoser, related_name="yos_sent")
+    yo_to = ForeignKeyField(Yoser, related_name="yos")
+    ts_added = DateTimeField(default=datetime.datetime.now)
