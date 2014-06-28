@@ -73,7 +73,7 @@ def yo():
 
 
     yoser = getYoserFromYoserName(yosername)
-    print yoser.name, from_yoser.name, twilio_number
+    print yoser.phone_number, from_yoser.name, twilio_number
     message = twilio_client.messages.create(to=yoser.phone_number,
                                             from_=twilio_number,
                                             body="YO!\n\n-"+from_yoser.name)
