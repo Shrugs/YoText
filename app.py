@@ -73,7 +73,7 @@ def yo():
         try:
             print request.form
             from_yoser = getYoserFromNumber(request.form['From'])
-            yosername = yo_regex.match(request.form['Body']).group('name')
+            yosername = yo_regex.match(request.form['Body']).group('name').lower()
 
         except KeyError:
             abort(400)
