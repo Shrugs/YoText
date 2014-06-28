@@ -57,6 +57,7 @@ def yo():
     if not yosername:
         # is either twilio or bad request
         try:
+            print request.form
             from_yoser = getYoserFromNumber(request.form['From'])
         except KeyError:
             # not twilio
@@ -67,7 +68,7 @@ def yo():
 
     yoser = getYoserFromYoserName(yosername)
 
-
+    print yoser.name, from_yoser.name, twilio_number
     message = twilio_client.messages.create(to=yoser.phone_number,
                                             from_=twilio_number,
                                             body="YO!\n\n-"+from_yoser.name)
