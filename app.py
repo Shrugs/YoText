@@ -19,6 +19,9 @@ def getFriends(yoser):
 def getYoserFromYoserName(yosername):
     return Yoser.get(Yoser.name==yosername)
 
+def getYoserFromNumber(num):
+    return Yoser.get(Yoser.phone_number==num)
+
 @app.route('/create', methods=['GET', 'POST'])
 def createUser():
     status = None
@@ -52,22 +55,24 @@ def createUser():
 @app.route('/yo', methods=['GET', 'POST'])
 def yo():
 
-    yosername = request.args.get('to', None)
     from_yoser = None
-    if not yosername:
+    if request.method == 'GET':
+        yosername = request.args.get('to', None)
+        # not twilio
+        from_yoser = getYoserFromYoserName(request.args.get('from', None))
+        if not from_yoser:
+            # is bad request
+            abort(400)
+    elif request.method == 'POST':
         # is either twilio or bad request
         try:
             print request.form
             from_yoser = getYoserFromNumber(request.form['From'])
         except KeyError:
-            # not twilio
-            from_yoser = getYoserFromYoserName(request.args.get('from', None))
-            if not from_yoser:
-                # is bad request
-                abort(400)
+            abort(400)
+
 
     yoser = getYoserFromYoserName(yosername)
-
     print yoser.name, from_yoser.name, twilio_number
     message = twilio_client.messages.create(to=yoser.phone_number,
                                             from_=twilio_number,
