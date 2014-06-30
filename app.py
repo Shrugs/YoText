@@ -15,6 +15,7 @@ restricted_names = [
 ]
 
 yo_regex = re.compile(r"^[YyTt]o (?P<name>\w+)")
+create_regex = re.compile(r"^[Cc]reate (?P<name>\w+)")
 
 
 def getFriends(yoser):
@@ -29,69 +30,48 @@ def getYoserFromNumber(num):
     return Yoser.get(Yoser.phone_number==num)
 
 
-@app.route('/create', methods=['GET', 'POST'])
-def createUser():
-    status = None
-    if request.method == 'POST':
+def createUser(user, phone_number):
 
-        try:
+    if not user or not phone_number or (user in restricted_names):
+        return "Invalid Parameters"
 
-            if (not request.form['name']) or (request.form['name'] in restricted_names):
-                raise peewee.IntegrityError
+    try:
+        yoser = Yoser.create(
+            name=user,
+            phone_number=('+' + phone_number))
+    except peewee.IntegrityError:
+        return "Username %s Taken" % user
 
-            yoser = Yoser.create(
-                name=request.form['name'],
-                phone_number=('+' + request.form['phone_number']),
-                endpoint=request.form['endpoint'])
-            try:
-                yoser.address = request.form['address']
-                yoser.save()
-            except KeyError:
-                pass
-
-            status = "Username Created! Send YOs by texting %s with 'yo %s>'" % (twilio_number, yoser.name)
-
-        except peewee.IntegrityError, e:
-            status = "Username %s Taken" % request.form['name']
-
-    return render_template('create.html',
-                           status=status,
-                           stuff=request.form)
+    return "You are now user %s!" % yoser.name
 
 
-@app.route('/yo', methods=['GET', 'POST'])
+@app.route('/yo', methods=['POST'])
 def yo():
 
     from_yoser = None
-    yosername = None
-    if request.method == 'GET':
-        yosername = request.args.get('to', None)
-        # not twilio
-        from_yoser = getYoserFromYoserName(request.args.get('from', None))
-        if not from_yoser:
-            # is bad request
-            abort(400)
-    elif request.method == 'POST':
-        # is either twilio or bad request
-        try:
-            print request.form
-            from_yoser = getYoserFromNumber(request.form['From'])
-            yosername = yo_regex.match(request.form['Body']).group('name').lower()
+    to_yoser = None
 
-        except KeyError:
-            abort(400)
+    body = request.form['Body']
 
-    if not yosername:
-        abort(400)
+    isCreate = create_regex.match(body)
+    isYo = yo_regex.match(body)
 
-    yoser = getYoserFromYoserName(yosername)
+    if isCreate:
 
-    print yoser.phone_number, from_yoser.name, twilio_number
-    message = twilio_client.messages.create(to=yoser.phone_number,
-                                            from_=twilio_number,
-                                            body="YO!\n-" + from_yoser.name)
+        twilio_client.messages.create(to=request.form['From'],
+                                      from_=twilio_number,
+                                      body=createUser(isCreate.group('name').lower(), request.form['From']))
+    elif isYo:
+        to_yoser_name = isYo.group('name').lower()
+        from_yoser = getYoserFromNumber(request.form['From'])
 
-    return "YO, %s!" % yoser.name
+        to_yoser = getYoserFromYoserName(to_yoser_name)
+
+        message = twilio_client.messages.create(to=to_yoser.phone_number,
+                                                from_=twilio_number,
+                                                body="YO!\n-" + from_yoser.name)
+
+    return "YO, %s!" % to_yoser.name
 
 if __name__ == '__main__':
     app.run(debug=True)
