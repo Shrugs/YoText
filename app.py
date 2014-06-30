@@ -16,6 +16,7 @@ restricted_names = [
 
 yo_regex = re.compile(r"^[YyTt]o (?P<name>\w+)")
 
+
 def getFriends(yoser):
     return yoser.friends
 
@@ -23,8 +24,10 @@ def getFriends(yoser):
 def getYoserFromYoserName(yosername):
     return Yoser.get(Yoser.name==yosername)
 
+
 def getYoserFromNumber(num):
     return Yoser.get(Yoser.phone_number==num)
+
 
 @app.route('/create', methods=['GET', 'POST'])
 def createUser():
@@ -38,9 +41,8 @@ def createUser():
 
             yoser = Yoser.create(
                 name=request.form['name'],
-                phone_number=('+'+request.form['phone_number']),
-                endpoint=request.form['endpoint']
-                )
+                phone_number=('+' + request.form['phone_number']),
+                endpoint=request.form['endpoint'])
             try:
                 yoser.address = request.form['address']
                 yoser.save()
@@ -53,8 +55,9 @@ def createUser():
             status = "Username %s Taken" % request.form['name']
 
     return render_template('create.html',
-        status=status,
-        stuff=request.form)
+                           status=status,
+                           stuff=request.form)
+
 
 @app.route('/yo', methods=['GET', 'POST'])
 def yo():
@@ -86,7 +89,7 @@ def yo():
     print yoser.phone_number, from_yoser.name, twilio_number
     message = twilio_client.messages.create(to=yoser.phone_number,
                                             from_=twilio_number,
-                                            body="YO!\n-"+from_yoser.name)
+                                            body="YO!\n-" + from_yoser.name)
 
     return "YO, %s!" % yoser.name
 
