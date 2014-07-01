@@ -23,11 +23,11 @@ def getFriends(yoser):
 
 
 def getYoserFromYoserName(yosername):
-    return Yoser.get(Yoser.name==yosername)
+    return Yoser.get(Yoser.name == yosername)
 
 
 def getYoserFromNumber(num):
-    return Yoser.get(Yoser.phone_number==num)
+    return Yoser.get(Yoser.phone_number == num)
 
 
 def createUser(user, phone_number):
@@ -67,9 +67,9 @@ def yo():
 
         to_yoser = getYoserFromYoserName(to_yoser_name)
 
-        message = twilio_client.messages.create(to=to_yoser.phone_number,
-                                                from_=twilio_number,
-                                                body="YO!\n-" + from_yoser.name)
+        twilio_client.messages.create(to=to_yoser.phone_number,
+                                      from_=twilio_number,
+                                      body="YO!\n-" + from_yoser.name)
 
     return "YO, %s!" % to_yoser.name
 
