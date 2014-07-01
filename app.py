@@ -38,7 +38,7 @@ def createUser(user, phone_number):
     try:
         yoser = Yoser.create(
             name=user,
-            phone_number=('+' + phone_number))
+            phone_number=(phone_number))
     except peewee.IntegrityError:
         return "Username %s Taken" % user
 
@@ -60,7 +60,7 @@ def yo():
 
         twilio_client.messages.create(to=request.form['From'],
                                       from_=twilio_number,
-                                      body=createUser(isCreate.group('name').lower(), request.form['From']))
+                                      body=createUser(isCreate.group('name').lower(), '+' + request.form['From']))
     elif isYo:
         to_yoser_name = isYo.group('name').lower()
         from_yoser = getYoserFromNumber(request.form['From'])
