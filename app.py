@@ -23,11 +23,17 @@ def getFriends(yoser):
 
 
 def getYoserFromYoserName(yosername):
-    return Yoser.get(Yoser.name == yosername)
+    try:
+        return Yoser.get(Yoser.name == yosername)
+    except peewee.YoserDoesNotExist:
+        return None
 
 
 def getYoserFromNumber(num):
-    return Yoser.get(Yoser.phone_number == num)
+    try:
+        return Yoser.get(Yoser.phone_number == num)
+    except peewee.YoserDoesNotExist:
+        return None
 
 
 def createUser(user, phone_number):
@@ -79,9 +85,10 @@ def yo():
 
         to_yoser = getYoserFromYoserName(to_yoser_name)
 
-        twilio_client.messages.create(to=to_yoser.phone_number,
-                                      from_=twilio_number,
-                                      body="YO!\n-" + from_yoser.name)
+        if to_yoser and from_yoser:
+            twilio_client.messages.create(to=to_yoser.phone_number,
+                                          from_=twilio_number,
+                                          body="YO!\n-" + from_yoser.name)
 
     return "K"
 
