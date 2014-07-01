@@ -71,7 +71,7 @@ def yo():
                                       from_=twilio_number,
                                       body="YO!\n-" + from_yoser.name)
 
-    return "YO, %s!" % to_yoser.name
+    return
 
 if __name__ == '__main__':
     app.run(debug=True)
