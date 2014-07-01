@@ -4,9 +4,7 @@ Because even people in the 3rd world need the ability to experience the world ch
 
 Found a neighbor's animal? **Just Yo.**
 
-Villiage under attack? **Just Yo.**
-
-Need water? **Just Yo.**
+Village under attack? **Just Yo.**
 
 **Yo.** Because why the fuck not?
 
@@ -16,7 +14,7 @@ Need water? **Just Yo.**
 Sign up with `I am <user>`.
 Yo at a buddy with `yo <user>`
 
-Host your own texting yo by cloning this repo and creating an info.py with the following values and creating a new heroku app.
+Host your own SMS Yo by cloning this repo and creating an info.py with the following values and serving it at a new heroku app.
 
 ```python
 db_name = ""
