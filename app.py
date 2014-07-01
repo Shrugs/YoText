@@ -57,10 +57,22 @@ def yo():
     isYo = yo_regex.match(body)
 
     if isCreate:
+        name = isCreate.group('name').lower()
+        try:
+            from_yoser = getYoserFromNumber(requet.form['From'])
+            if from_yoser:
+                old_name = from_yoser.name
+                from_yoser.name = name
+                from_yoser.save()
+                twilio_client.messages.create(to=from_yoser.phone_number,
+                                              from_=twilio_number,
+                                              body="You've changed your name from %s to %s." % (old_name, from_yoser.name))
+        except peewee.IntegrityError:
+            # user doesn't exist
+            twilio_client.messages.create(to=request.form['From'],
+                                          from_=twilio_number,
+                                          body=createUser(name, '+' + request.form['From']))
 
-        twilio_client.messages.create(to=request.form['From'],
-                                      from_=twilio_number,
-                                      body=createUser(isCreate.group('name').lower(), '+' + request.form['From']))
     elif isYo:
         to_yoser_name = isYo.group('name').lower()
         from_yoser = getYoserFromNumber(request.form['From'])
