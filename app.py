@@ -10,12 +10,12 @@ twilio_client = TwilioRestClient(twilio_sid, twilio_secret)
 app = Flask(__name__)
 
 restricted_names = [
-    "create",
+    "iam",
     "yo"
 ]
 
 yo_regex = re.compile(r"^[YyTt]o (?P<name>\w+)")
-create_regex = re.compile(r"^[Cc]reate (?P<name>\w+)")
+create_regex = re.compile(r"^[Ii] ?am (?P<name>\w+)")
 
 
 def getFriends(yoser):
