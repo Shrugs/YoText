@@ -25,14 +25,14 @@ def getFriends(yoser):
 def getYoserFromYoserName(yosername):
     try:
         return Yoser.get(Yoser.name == yosername)
-    except peewee.YoserDoesNotExist:
+    except Exception:
         return None
 
 
 def getYoserFromNumber(num):
     try:
         return Yoser.get(Yoser.phone_number == num)
-    except peewee.YoserDoesNotExist:
+    except Exception:
         return None
 
 
@@ -65,7 +65,7 @@ def yo():
     if isCreate:
         name = isCreate.group('name').lower()
         try:
-            from_yoser = getYoserFromNumber(requet.form['From'])
+            from_yoser = getYoserFromNumber(request.form['From'])
             if from_yoser:
                 old_name = from_yoser.name
                 from_yoser.name = name
